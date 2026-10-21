@@ -89,7 +89,7 @@ fi
 AUXTMP=$(mktemp -d)
 mkdir -p $AUXTMP/reco_profile
 cp -r $HERE/tests.txt $HERE/inputs.txt $HERE/pairs.txt $HERE/fcl $AUXTMP/reco_profile/ || exit 1
-[ -n "$RP_KPP_CALIB" ] && { cp -r "$RP_KPP_CALIB" $AUXTMP/kpp_calib || exit 1; }
+[ -n "$RP_KPP_CALIB" ] && { cp -rL "$RP_KPP_CALIB" $AUXTMP/kpp_calib || exit 1; }
 tar czf $AUXTMP/aux.tgz -C $AUXTMP --exclude='__pycache__' reco_profile $([ -n "$RP_KPP_CALIB" ] && echo kpp_calib) || exit 1
 ifdh mkdir_p "$OUTROOT/aux" 2>/dev/null; ifdh cp $AUXTMP/aux.tgz "$PNFS_AUX" || { echo "ERROR: stage aux"; exit 1; }
 rm -rf $AUXTMP
