@@ -1,0 +1,3 @@
+# V-flag-fbh: swap the background-hit flagger from DeltaFinder (production) to FlagBkgHits, the alternative left
+# commented in Production/JobConfig/reco/prolog.fcl. Both produce flagPH:ComboHitCollection, so downstream is unchanged.
+physics.producers.flagPH : @local::TrkHitReco.producers.FlagBkgHits

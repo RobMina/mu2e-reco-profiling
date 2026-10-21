@@ -1,0 +1,10 @@
+# V-pr-trkpatrec-only: helix merging fed by TrkPatRec (TimeClusterFinder + RobustHelixFinder) alone.
+# MC on-spill base only.
+physics.producers.MHDe.HelixFinders  : [ "HelixFinderDe" ]
+physics.producers.MHUe.HelixFinders  : [ "HelixFinderUe" ]
+physics.producers.MHDmu.HelixFinders : [ "HelixFinderDmu" ]
+physics.producers.MHUmu.HelixFinders : [ "HelixFinderUmu" ]
+physics.RecoPath : [ @sequence::Reconstruction.PreTrk,
+  TimeClusterFinderDe, HelixFinderDe, MHDe, KKDe, TimeClusterFinderUe, HelixFinderUe, MHUe, KKUe,
+  TimeClusterFinderDmu, HelixFinderDmu, MHDmu, KKDmu, TimeClusterFinderUmu, HelixFinderUmu, MHUmu, KKUmu,
+  LHFilter, SelectReco, @sequence::Reconstruction.MCReco ]

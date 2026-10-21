@@ -1,0 +1,6 @@
+# B-regrow-kl: RegrowKinematicLine on KKLine seeds, with the MC associations on (set on the module directly; the stock
+# recoMC wrapper's assignment does not reach the module).
+# Input: reco.art from job S-ext (base_extracted_mc on I6).
+#include "Production/JobConfig/reco/regrowKL.fcl"
+physics.producers.RegrowKL.KalSeedMCAssns : "SelectReco"
+outputs.RegrowOutput.fileName : "regrow.art"

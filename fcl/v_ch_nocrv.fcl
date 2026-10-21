@@ -1,0 +1,2 @@
+# V-ch-nocrv: KKCHmu without the CRV extrapolation (CHXTRAP ToCRV false): prices the tracker-to-CRV propagation.
+physics.producers.KKCHmu.ExtrapolationSettings.ToCRV : false

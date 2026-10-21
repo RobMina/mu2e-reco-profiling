@@ -1,0 +1,10 @@
+# V-kl-truthseed: add the MC-only KLTruthSeed diagnostic (PR #1869) after the extracted reco, as the kkts MC campaigns run
+# it (rule M10 keeps it on in MC reco). Prices the diagnostic. Its transient products are dropped from the output.
+physics.producers.KLTruthSeed : {
+  @table::Mu2eKinKal.KLTruthSeed
+  KalSeedCollection : "KKLine"
+  KalSeedMCAssns    : "SelectReco"
+  MCTrajectories    : "compressRecoMCs"
+}
+physics.RecoPath : [ @sequence::Reconstruction.NoFieldPath, KLTruthSeed ]
+outputs.KinematicLineOutput.outputCommands : [ @sequence::outputs.KinematicLineOutput.outputCommands, "drop *_KLTruthSeed_*_*" ]

@@ -1,0 +1,5 @@
+# V-lh-maxdtstep: LoopHelix drift-fit extrapolation step MaxDtStep 1 ns -> 10 ns (the seed-fit LHSEEDXTRAP value).
+physics.producers.KKDe.ExtrapolationSettings.MaxDtStep  : 10.0
+physics.producers.KKUe.ExtrapolationSettings.MaxDtStep  : 10.0
+physics.producers.KKDmu.ExtrapolationSettings.MaxDtStep : 10.0
+physics.producers.KKUmu.ExtrapolationSettings.MaxDtStep : 10.0

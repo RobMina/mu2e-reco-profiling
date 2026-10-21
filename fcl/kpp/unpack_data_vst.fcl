@@ -1,0 +1,73 @@
+# KPP raw -> digis for the VST stream (run 124155 and later): EventHeader/EventWindowMarker from the CFO fragment,
+# straw digis with ADC waveforms, CRV digis. Tracker panel map and CRV conditions from text files (no DB IOV for
+# this run).
+#
+#   mu2e -c unpack_data_vst.fcl -s <raw.art> -o <dig.art>
+
+#include "Offline/fcl/minimalMessageService.fcl"
+#include "Offline/fcl/standardProducers.fcl"
+#include "Offline/fcl/standardServices.fcl"
+#include "Offline/DAQ/fcl/prolog.fcl"
+
+process_name : Unpack
+
+source : {
+  module_type : RootInput
+  fileNames   : @nil
+  maxEvents   : -1
+}
+
+services : @local::Services.Reco
+
+physics : {
+  producers : {
+    EWMProducer : {
+      module_type : EventHeaderFromCFOFragment
+      cfoTag      : "daq:CFO"
+      createEWM   : true
+      isSim       : false
+      diagLevel   : 0
+    }
+    makeSD  : {
+      @table::DAQ.producers.makeSD
+      saveWaveforms : true
+    }
+    CrvDigi : {
+      module_type   : CrvDigisFromArtdaqFragmentsFEBII
+      useROC4asROC2 : true
+      diagLevel     : 0
+    }
+  }
+
+  UnpackPath : [ EWMProducer, makeSD, CrvDigi ]
+  EndPath    : [ Output ]
+
+  trigger_paths : [ UnpackPath ]
+  end_paths     : [ EndPath ]
+}
+
+outputs : {
+  Output : {
+    module_type    : RootOutput
+    fileName       : "dig.art"
+    outputCommands : [ "keep *_*_*_*", "drop artdaq::*_*_*_*" ]
+  }
+}
+
+services.GeometryService.inputFile : "Offline/Mu2eG4/geom/geom_common_extracted.txt"
+
+services.ProditionsService.crvStatus.useDb : true
+services.ProditionsService.crvCalib.useDb  : true
+services.DbService.purpose : Sim_best
+services.DbService.version : v1_5
+services.DbService.textFile : [
+  "Offline/CRVConditions/data/status_extracted_20260630.txt",
+  "Offline/CRVConditions/data/calib_extracted_20260630.txt",
+  "Offline/TrackerConditions/data/TrkPanelMap.txt"
+]
+services.DbService.verbose : 0
+
+services.ProditionsService.trackerPanelMap.useDb : true
+
+services.TFileService.fileName : "/dev/null"
+services.scheduler.wantSummary : true

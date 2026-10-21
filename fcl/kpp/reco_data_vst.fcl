@@ -1,0 +1,56 @@
+# Off-spill KPP/VST cosmic data reco: Production/JobConfig/reco/Extracted.fcl (field-off reco on the extracted
+# geometry, KKLine tracks extrapolated to the CRV, CRV pulses and coincidences) with
+#  - CaloReco dropped (the calorimeter is not unpacked),
+#  - conditions from text files or fcl nominal values where the DB has no IOV for the run,
+#  - the off-spill straw-hit time window (the on-spill 400-1710 ns default would discard almost every cosmic),
+#  - extra CRV products kept in the output.
+#
+#   mu2e -c reco_data_vst.fcl -s <dig.art> -o <rec.art>
+
+#include "Production/JobConfig/reco/Extracted.fcl"
+
+physics.RecoPath : [
+  @sequence::Reconstruction.TrkHitReco,
+  @sequence::Reconstruction.CrvReco,
+  @sequence::Reconstruction.LineReco,
+  KLFilter,
+  SelectReco
+]
+
+physics.producers.KKLine.KKFitSettings.UseCaloCluster : false
+
+services.DbService.purpose : "TRACKER_VST"
+services.DbService.version : "v2_0"
+
+services.ProditionsService.crvStatus.useDb : true
+services.ProditionsService.crvCalib.useDb  : true
+services.DbService.textFile : [
+  "Offline/CRVConditions/data/status_extracted_20260630.txt",
+  "Offline/CRVConditions/data/calib_extracted_20260630.txt"
+]
+services.DbService.verbose : 0
+
+services.ProditionsService.trackerPanelMap.useDb : false
+
+services.ProditionsService.strawElectronics.useDb : false
+
+services.ProditionsService.alignedTracker.useDb : false
+
+services.ProditionsService.trackerStatus.Settings.useDb : false
+
+outputs.KinematicLineOutput.outputCommands : [
+  @sequence::outputs.KinematicLineOutput.outputCommands,
+  "keep mu2e::CrvRecoPulses_CrvRecoPulses_*_*",
+  "keep mu2e::CrvCoincidenceClusters_CrvCoincidenceClusterFinder_*_*",
+  "keep mu2e::TimeClusters_SimpleTimeCluster_*_*"
+]
+
+physics.producers.makeSH.ProtonBunchTimeTag : "PBTFSD"
+
+services.scheduler.wantSummary : true
+
+physics.producers.makeSH.MinimumTime : 0
+physics.producers.makeSH.MaximumTime : 256000
+physics.producers.makePH.MinimumTime : 0
+physics.producers.makePH.MaximumTime : 256000
+physics.producers.makePH.Unsorted    : true

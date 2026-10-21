@@ -1,0 +1,4 @@
+# V-out-uncompressed / no fast cloning are not separate: output cost is isolated by v_stage_nooutput. This variant drops
+# MidRecoProducts (helix seeds, time clusters) from the on-spill output to price their share of output size and write time.
+outputs.LoopHelixOutput.outputCommands : [ @sequence::outputs.LoopHelixOutput.outputCommands,
+  "drop mu2e::HelixSeeds_MH*_*_*", "drop mu2e::HelixSeed*Assns_*_*_*", "drop mu2e::TimeClusters_MH*_*_*" ]

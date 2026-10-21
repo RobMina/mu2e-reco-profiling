@@ -1,0 +1,21 @@
+# V-lh-noann: LoopHelix drift extension without the DriftANN / BkgANN hit updaters: 9 meta-iterations -> the first 3
+# (CADSHU only). Prices the ANN updaters and the extra annealing steps. Physics changes: diagnostic only.
+# KKFitSettings requires one CADSHUSettings entry per CADSHU use and none left over for the ANN updaters, so the CADSHU
+# list is cut to its first 3 entries (values copied from the production config, identical for all four fits) and the
+# DriftANN/BkgANN lists are emptied. No BEGIN_PROLOG: this file is included after the base config's definitions.
+physics.producers.KKDe.ExtensionSettings.MetaIterationSettings : [ [2.0,"CADSHU"], [1.0,"CADSHU"], [0.3,"CADSHU"] ]
+physics.producers.KKDe.ExtensionSettings.CADSHUSettings : [ [ 10, 20, 5, 5, "TOT", "Null:Inactive", "", 0 ], [ 10, 20, 5, 4, "TOT", "Null:Inactive", "", 0 ], [ 8, 16, 5, 3, "TOT:NullDriftVar", "Null:Inactive", "", 0 ] ]
+physics.producers.KKDe.ExtensionSettings.DriftANNSHUSettings : []
+physics.producers.KKDe.ExtensionSettings.BkgANNSHUSettings : []
+physics.producers.KKUe.ExtensionSettings.MetaIterationSettings : [ [2.0,"CADSHU"], [1.0,"CADSHU"], [0.3,"CADSHU"] ]
+physics.producers.KKUe.ExtensionSettings.CADSHUSettings : [ [ 10, 20, 5, 5, "TOT", "Null:Inactive", "", 0 ], [ 10, 20, 5, 4, "TOT", "Null:Inactive", "", 0 ], [ 8, 16, 5, 3, "TOT:NullDriftVar", "Null:Inactive", "", 0 ] ]
+physics.producers.KKUe.ExtensionSettings.DriftANNSHUSettings : []
+physics.producers.KKUe.ExtensionSettings.BkgANNSHUSettings : []
+physics.producers.KKDmu.ExtensionSettings.MetaIterationSettings : [ [2.0,"CADSHU"], [1.0,"CADSHU"], [0.3,"CADSHU"] ]
+physics.producers.KKDmu.ExtensionSettings.CADSHUSettings : [ [ 10, 20, 5, 5, "TOT", "Null:Inactive", "", 0 ], [ 10, 20, 5, 4, "TOT", "Null:Inactive", "", 0 ], [ 8, 16, 5, 3, "TOT:NullDriftVar", "Null:Inactive", "", 0 ] ]
+physics.producers.KKDmu.ExtensionSettings.DriftANNSHUSettings : []
+physics.producers.KKDmu.ExtensionSettings.BkgANNSHUSettings : []
+physics.producers.KKUmu.ExtensionSettings.MetaIterationSettings : [ [2.0,"CADSHU"], [1.0,"CADSHU"], [0.3,"CADSHU"] ]
+physics.producers.KKUmu.ExtensionSettings.CADSHUSettings : [ [ 10, 20, 5, 5, "TOT", "Null:Inactive", "", 0 ], [ 10, 20, 5, 4, "TOT", "Null:Inactive", "", 0 ], [ 8, 16, 5, 3, "TOT:NullDriftVar", "Null:Inactive", "", 0 ] ]
+physics.producers.KKUmu.ExtensionSettings.DriftANNSHUSettings : []
+physics.producers.KKUmu.ExtensionSettings.BkgANNSHUSettings : []

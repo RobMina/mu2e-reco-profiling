@@ -1,0 +1,7 @@
+# unpack_data_vst_fullmap.fcl for Offline at or after 1a89014e8 (2026-09-21), where makeSD's keyOnMnid became
+# `addressing` (keyOnMnid: true is addressing: byMnid, no behaviour change). Used by fcl/base_kpp_unpack.fcl.
+
+#include "unpack_data_vst_fullmap.fcl"
+
+physics.producers.makeSD.keyOnMnid  : @erase
+physics.producers.makeSD.addressing : byMnid

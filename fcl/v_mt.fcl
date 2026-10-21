@@ -1,0 +1,4 @@
+# V-mt: art multi-threading (N schedules x N threads). Not all reco modules are thread-safe or shared: art serialises
+# legacy/one modules, so this measures achievable throughput and RSS growth per extra schedule, not a production setting.
+# run_profile.sh passes --nthreads/--nschedules from the variant name (mt2, mt4); this file only records the intent.
+services.scheduler.wantSummary : true

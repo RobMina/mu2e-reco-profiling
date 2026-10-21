@@ -1,0 +1,5 @@
+# B-onspill-mc: production on-spill MC reco (PreTrk + KKDe/KKUe/KKDmu/KKUmu + MCReco), LHFilter already off.
+# Inputs: I1 NoPrimaryMix1BB, I2 CeMLeadingLogMix1BB, I3 CeEndpointOnSpill, I5 CosmicSignalOnSpill.
+# Output kept (art write is part of the measured cost); run_profile.sh points it at $OUT and deletes it unless KEEP=1.
+#include "Production/JobConfig/recoMC/OnSpill.fcl"
+outputs.LoopHelixOutput.fileName : "reco.art"

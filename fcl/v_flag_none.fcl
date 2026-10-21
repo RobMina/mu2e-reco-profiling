@@ -1,0 +1,4 @@
+# V-flag-none: no pileup hit flagging (NoPileup_epilog.fcl behaviour on on-spill input): helix finders read makePH.
+# It also widens the makeSH/makePH energy and radius windows, so it measures "no-pileup config on pileup input".
+# The worst case for pattern recognition load; shows how much downstream CPU the flagger saves.
+#include "Production/JobConfig/reco/NoPileup_epilog.fcl"

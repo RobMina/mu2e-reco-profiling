@@ -1,0 +1,10 @@
+# V-pr-calpatrec-only: helix merging fed by CalHelixFinder alone (Agnostic and TrkPatRec finders removed).
+# MC on-spill base only.
+physics.producers.MHDe.HelixFinders  : [ "CalHelixFinderDe" ]
+physics.producers.MHUe.HelixFinders  : [ "CalHelixFinderUe" ]
+physics.producers.MHDmu.HelixFinders : [ "CalHelixFinderDmu" ]
+physics.producers.MHUmu.HelixFinders : [ "CalHelixFinderUmu" ]
+physics.RecoPath : [ @sequence::Reconstruction.PreTrk,
+  CalTimePeakFinderDe, CalHelixFinderDe, MHDe, KKDe, CalTimePeakFinderUe, CalHelixFinderUe, MHUe, KKUe,
+  CalTimePeakFinderDmu, CalHelixFinderDmu, MHDmu, KKDmu, CalTimePeakFinderUmu, CalHelixFinderUmu, MHUmu, KKUmu,
+  LHFilter, SelectReco, @sequence::Reconstruction.MCReco ]

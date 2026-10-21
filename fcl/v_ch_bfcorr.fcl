@@ -1,0 +1,10 @@
+# V-ch-bfcorr: KKCHmu with BFieldCorrection on in fit and extension, with the stability settings of KFTrack/KinKal#224
+# and Mu2e/Offline#2021. bfgeom_v01_minfield = stock bfgeom_v01 + minUsableField 1e-6 T.
+# Needs an Offline with MinDomainTimeStep/DomainMargin (Mu2e/Offline#2021, merged 2026-10-08).
+physics.producers.KKCHmu.FitSettings.BFieldCorrection        : true
+physics.producers.KKCHmu.ExtensionSettings.BFieldCorrection  : true
+physics.producers.KKCHmu.FitSettings.DomainMargin            : 0.0
+physics.producers.KKCHmu.ExtensionSettings.DomainMargin      : 0.0
+physics.producers.KKCHmu.FitSettings.MinDomainTimeStep       : 0.03
+physics.producers.KKCHmu.ExtensionSettings.MinDomainTimeStep : 0.03
+services.GeometryService.bFieldFile : "Offline/Mu2eG4/geom/bfgeom_v01_minfield.txt"

@@ -1,0 +1,4 @@
+# B-regrow-lh: RegrowLoopHelix on KKDe seeds (minimal schedule: RegrowSH + RegrowLH, MC wrapper).
+# Input: reco.art from job S-on-ce (base_onspill_mc on I2), which carries SelectReco digis and KalSeedMC.
+#include "Production/JobConfig/recoMC/regrowLH.fcl"
+outputs.RegrowOutput.fileName : "regrow.art"

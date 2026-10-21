@@ -1,0 +1,4 @@
+# Conditions for Sim_best v1_5 samples (I5 CosmicSignalOnSpill au, I6 CosmicCRYExtracted au) and for the v1_1 samples
+# I3/I4 (an), for which v1_1 and v1_5 resolve to identical conditions at run 1430 (Production/Validation/offSpill.fcl).
+services.DbService.purpose : Sim_best
+services.DbService.version : v1_5

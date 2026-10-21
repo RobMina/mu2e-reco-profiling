@@ -1,0 +1,5 @@
+# V-stage-de: precursors + downstream-electron chain only (TZ/Agnostic, CalPatRec, TrkPatRec, MHDe, KKDe); no output.
+physics.RecoPath : [ @sequence::Reconstruction.PreTrk, @sequence::Reconstruction.DeReco ]
+physics.EndPath : [ ]
+physics.end_paths : [ ]
+outputs : {}

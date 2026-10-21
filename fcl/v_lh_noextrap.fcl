@@ -1,0 +1,14 @@
+# V-lh-noext: LoopHelix drift fits with no extrapolation (no tracker-perimeter, upstream, OPA or ST passes).
+# Cost of KKExtrap for LoopHelix. Leaves the ST/TT sample surfaces in KKFitSettings unchanged.
+physics.producers.KKDe.ExtrapolationSettings.ToTrackerPerimeter  : false
+physics.producers.KKDe.ExtrapolationSettings.Upstream            : false
+physics.producers.KKDe.ExtrapolationSettings.ToOPA               : false
+physics.producers.KKUe.ExtrapolationSettings.ToTrackerPerimeter  : false
+physics.producers.KKUe.ExtrapolationSettings.Upstream            : false
+physics.producers.KKUe.ExtrapolationSettings.ToOPA               : false
+physics.producers.KKDmu.ExtrapolationSettings.ToTrackerPerimeter : false
+physics.producers.KKDmu.ExtrapolationSettings.Upstream           : false
+physics.producers.KKDmu.ExtrapolationSettings.ToOPA              : false
+physics.producers.KKUmu.ExtrapolationSettings.ToTrackerPerimeter : false
+physics.producers.KKUmu.ExtrapolationSettings.Upstream           : false
+physics.producers.KKUmu.ExtrapolationSettings.ToOPA              : false

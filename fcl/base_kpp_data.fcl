@@ -1,0 +1,5 @@
+# KPP run 124155 (trk.vst stream) calibrated data reco (fcl/kpp/reco_data_vst_daqana.fcl).
+# Input: the dig.art made from I7 by the unpack test A7. Needs the KPP calibration set in $RP_KPP_CALIB
+# (fcl/kpp/README.md); env.sh puts it on FHICL_FILE_PATH and MU2E_SEARCH_PATH.
+#include "reco_data_vst_daqana.fcl"
+outputs.KinematicLineOutput.fileName : "reco.art"

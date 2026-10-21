@@ -1,0 +1,10 @@
+# V-lh-nosavedomains: LoopHelix KalSeeds without saved B-field domains and with the T0 segment only.
+# Isolates KalSeed persistency cost (CPU in KKFit::createSeed, output size, memory of the product).
+physics.producers.KKDe.KKFitSettings.SaveDomains     : false
+physics.producers.KKUe.KKFitSettings.SaveDomains     : false
+physics.producers.KKDmu.KKFitSettings.SaveDomains    : false
+physics.producers.KKUmu.KKFitSettings.SaveDomains    : false
+physics.producers.KKDe.KKFitSettings.SaveTrajectory  : T0
+physics.producers.KKUe.KKFitSettings.SaveTrajectory  : T0
+physics.producers.KKDmu.KKFitSettings.SaveTrajectory : T0
+physics.producers.KKUmu.KKFitSettings.SaveTrajectory : T0

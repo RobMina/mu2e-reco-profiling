@@ -1,0 +1,10 @@
+# V-lh-nobfcorr: LoopHelix drift fits (KKDe/KKUe/KKDmu/KKUmu) with BFieldCorrection off in fit and extension.
+# Cost of the domain (B-field inhomogeneity) correction. Physics changes: diagnostic only.
+physics.producers.KKDe.FitSettings.BFieldCorrection        : false
+physics.producers.KKDe.ExtensionSettings.BFieldCorrection  : false
+physics.producers.KKUe.FitSettings.BFieldCorrection        : false
+physics.producers.KKUe.ExtensionSettings.BFieldCorrection  : false
+physics.producers.KKDmu.FitSettings.BFieldCorrection       : false
+physics.producers.KKDmu.ExtensionSettings.BFieldCorrection : false
+physics.producers.KKUmu.FitSettings.BFieldCorrection       : false
+physics.producers.KKUmu.ExtensionSettings.BFieldCorrection : false

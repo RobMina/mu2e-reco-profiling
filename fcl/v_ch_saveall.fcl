@@ -1,0 +1,2 @@
+# V-ch-saveall: KKCHmu SaveAllFits (failed fits persisted too): output-size and createSeed cost of keeping every fit.
+physics.producers.KKCHmu.ModuleSettings.SaveAllFits : true

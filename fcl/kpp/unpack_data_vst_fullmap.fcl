@@ -1,0 +1,18 @@
+# unpack_data_vst.fcl with the complete 216-panel TrkPanelMap, keyed on the motherboard ID (mnid). Offline's
+# TrkPanelMap.txt has 144 rows for this IOV, so planes 0, 1 and 8-17 would produce no StrawDigi.
+# TrkPanelMap_124155_full.txt is part of the KPP calibration set ($RP_KPP_CALIB, see README.md here).
+#
+#   mu2e -c unpack_data_vst_fullmap.fcl -s <raw.art> -o <dig.art>
+
+#include "unpack_data_vst.fcl"
+
+physics.producers.makeSD.keyOnMnid : true
+
+services.DbService.textFile : [
+  "Offline/CRVConditions/data/status_extracted_20260630.txt",
+  "Offline/CRVConditions/data/calib_extracted_20260630.txt",
+  "TrkPanelMap_124155_full.txt"
+]
+
+services.message.destinations.log.categories.default.limit : -1
+services.message.destinations.log.categories.MAKE_SD.limit : -1

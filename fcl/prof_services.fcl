@@ -1,0 +1,15 @@
+# Profiling services for every reco_profile job; included LAST (after base, variants and database).
+# Per-module CPU/real time (TimeTracker) and per-module memory deltas (MemoryTracker), each also written to SQLite
+# in the job's working directory; run_profile.sh copies the .db files next to the log.
+services.scheduler.wantSummary : true
+services.TimeTracker : {
+  printSummary : true
+  dbOutput : { filename : "timing.db" overwrite : true }
+}
+services.MemoryTracker : {
+  includeMallocInfo : false
+  dbOutput : { filename : "memory.db" overwrite : true }
+}
+services.TFileService.fileName : "/dev/null"
+services.DbService.verbose : 0
+services.message.destinations.log.outputStatistics : true

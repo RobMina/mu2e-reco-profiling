@@ -1,0 +1,3 @@
+# Conditions for Sim_best v1_3 samples (I1 NoPrimaryMix1BB au, I2 CeMLeadingLogMix1BB au): match the sample's simulation.
+services.DbService.purpose : Sim_best
+services.DbService.version : v1_3

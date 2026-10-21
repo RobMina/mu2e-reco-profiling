@@ -1,0 +1,54 @@
+diff --git a/Mu2eKinKal/fcl/prolog.fcl b/Mu2eKinKal/fcl/prolog.fcl
+index 4b2feae86..dd1e79639 100644
+--- a/Mu2eKinKal/fcl/prolog.fcl
++++ b/Mu2eKinKal/fcl/prolog.fcl
+@@ -492,6 +492,7 @@ Mu2eKinKal : {
+     module_type : LoopHelixFit
+     KKFitSettings : {
+       @table::Mu2eKinKal.KKFIT
++      MaxSeedStrawHitDt : 200.0 # ns; drop seed hits whose TOCA lands on another turn of the seed helix
+       SampleSurfaces : ["ST_Outer","ST_Front","ST_Back"] # these are additional surfaces; surfaces used in extrapolation are also sampled
+       # save trajectories in the Detector region
+       SaveDomains : true
+diff --git a/Mu2eKinKal/inc/KKFit.hh b/Mu2eKinKal/inc/KKFit.hh
+index 0e6bf006e..d47e663a4 100644
+--- a/Mu2eKinKal/inc/KKFit.hh
++++ b/Mu2eKinKal/inc/KKFit.hh
+@@ -149,7 +149,7 @@ namespace mu2e {
+       bool hintpiececa_; // straw hits re-reference on the piece holding their previous TPOCA
+       StrawHitFlag addsel_, addrej_; // selection and rejection flags when adding hits
+       // parameters controlling adding hits
+-      float maxStrawHitDoca_, maxStrawHitDt_, maxStrawDoca_, maxStrawDocaCon_, maxStrawUposBuff_;
++      float maxStrawHitDoca_, maxStrawHitDt_, maxSeedStrawHitDt_, maxStrawDoca_, maxStrawDocaCon_, maxStrawUposBuff_;
+       int maxDStraw_; // maximum distance from the track a strawhit can be to consider it for adding.
+       // cached info computed from the tracker, used in hit adding; these must be lazy-evaluated as the tracker doesn't exist on construction
+       mutable double strawradius_ = 0;
+@@ -190,6 +190,7 @@ namespace mu2e {
+     addrej_(fitconfig.addHitReject()),
+     maxStrawHitDoca_(fitconfig.maxStrawHitDOCA()),
+     maxStrawHitDt_(fitconfig.maxStrawHitDt()),
++    maxSeedStrawHitDt_(fitconfig.maxSeedStrawHitDt()),
+     maxStrawDoca_(fitconfig.maxStrawDOCA()),
+     maxStrawDocaCon_(fitconfig.maxStrawDOCAConsistency()),
+     maxStrawUposBuff_(fitconfig.maxStrawUposBuff()),
+@@ -246,6 +247,8 @@ namespace mu2e {
+       CAHint hint(ptime,htime);
+       // compute PCA between the seed trajectory and this straw
+       PCA pca(ptraj, wline, hint, tprec_ );
++      // a TOCA far from the measured time is on the wrong turn of the seed; such a hit would stretch the fit time range
++      if(maxSeedStrawHitDt_ > 0.0 && fabs(pca.particleToca() - htime) > maxSeedStrawHitDt_) continue;
+       // create the hit.  Note these may initially be unusable
+       hits.push_back(std::make_shared<KKSTRAWHIT>(kkbf, pca, combohit, straw, strawidx, strawresponse, hintpiececa_));
+       // create the material crossing, including this reference
+diff --git a/Mu2eKinKal/inc/KKFitSettings.hh b/Mu2eKinKal/inc/KKFitSettings.hh
+index 76dca2624..21cdd0fba 100644
+--- a/Mu2eKinKal/inc/KKFitSettings.hh
++++ b/Mu2eKinKal/inc/KKFitSettings.hh
+@@ -87,6 +87,7 @@ namespace mu2e {
+       fhicl::Sequence<std::string> addHitReject { Name("AddHitReject"), Comment("Flags required not to be present to add a hit") };
+       fhicl::Atom<float> maxStrawHitDOCA { Name("MaxStrawHitDOCA"), Comment("Max DOCA to add a hit (mm)") };
+       fhicl::Atom<float> maxStrawHitDt { Name("MaxStrawHitDt"), Comment("Max Detla time to add a hit (ns)") };
++      fhicl::Atom<float> maxSeedStrawHitDt { Name("MaxSeedStrawHitDt"), Comment("Max |seed particle TOCA - hit time| for a straw hit to enter the initial fit (ns); 0 keeps every hit"), 0.0 };
+       fhicl::Atom<int> maxDStraw { Name("MaxDStraw"), Comment("Maximum (integer) straw separation when adding straw hits") };
+       fhicl::Atom<bool> skipStrawCheck { Name("SkipStrawCheck"), Comment("Skip rho and panel longitudinal checks when adding straws") };
+       fhicl::Atom<float> addStrawMinDz { Name("AddStrawMinDz"), Comment("For tracks more vertical than this add all straws") };

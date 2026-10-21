@@ -1,0 +1,11 @@
+# id  path  (events; dataset)  -- located with samweb locate-file 2026-10-15; all tape-backed (nearline): the first open
+# recalls the file, so prestage the files before a timed run or the first run's wall time is meaningless.
+# 2026-10-15 14:55: all 7 ONLINE_AND_NEARLINE (dCache locality), no prestage needed; recheck before each grid wave.
+# events/size: I1 2000/0.85GB I2 8212/5.0GB I3 20396/1.7GB I4 116932/9.5GB I5 83411/6.7GB I6 28764/0.34GB I7 47331/2.0GB
+I1 /pnfs/mu2e/tape/phy-sim/dig/mu2e/NoPrimaryMix1BB/MDC2025au_best_v1_3/art/02/43/dig.mu2e.NoPrimaryMix1BB.MDC2025au_best_v1_3.001430_00000863.art
+I2 /pnfs/mu2e/tape/phy-sim/dig/mu2e/CeMLeadingLogMix1BB/MDC2025au_best_v1_3/art/33/f7/dig.mu2e.CeMLeadingLogMix1BB.MDC2025au_best_v1_3.001430_00000000.art
+I3 /pnfs/mu2e/tape/phy-sim/dig/mu2e/CeEndpointOnSpill/MDC2025an_best_v1_1/art/2b/4e/dig.mu2e.CeEndpointOnSpill.MDC2025an_best_v1_1.001430_00001171.art
+I4 /pnfs/mu2e/tape/phy-sim/dig/mu2e/CosmicSignalOffSpill/MDC2025an_best_v1_1/art/fd/03/dig.mu2e.CosmicSignalOffSpill.MDC2025an_best_v1_1.001430_00000013.art
+I5 /pnfs/mu2e/tape/phy-sim/dig/mu2e/CosmicSignalOnSpill/MDC2025au_best_v1_5/art/00/ee/dig.mu2e.CosmicSignalOnSpill.MDC2025au_best_v1_5.001430_00000000.art
+I6 /pnfs/mu2e/tape/phy-sim/dig/mu2e/CosmicCRYExtracted/MDC2025au_best_v1_5/art/eb/2c/dig.mu2e.CosmicCRYExtracted.MDC2025au_best_v1_5.001400_00001974.art
+I7 /pnfs/mu2e/tape/phy-raw/raw/mu2e/trk/vst/art/d9/cc/raw.mu2e.trk.vst.124155_000001.art

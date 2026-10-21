@@ -1,0 +1,10 @@
+# V-pr-agnostic-only: helix merging fed by AgnosticHelixFinder alone (CalPatRec and TrkPatRec finders removed from the
+# four LoopHelix chains). Measures each pattern-recognition family's share; compare efficiency with abstats before using.
+# MC on-spill base only (the path ends with the MCReco sequence).
+physics.producers.MHDe.HelixFinders  : [ "AgnosticHelixFinder" ]
+physics.producers.MHUe.HelixFinders  : [ "AgnosticHelixFinder" ]
+physics.producers.MHDmu.HelixFinders : [ "AgnosticHelixFinder" ]
+physics.producers.MHUmu.HelixFinders : [ "AgnosticHelixFinder" ]
+physics.RecoPath : [ @sequence::Reconstruction.PreTrk,
+  TZClusterFinder, AgnosticHelixFinder, MHDe, KKDe, MHUe, KKUe, MHDmu, KKDmu, MHUmu, KKUmu,
+  LHFilter, SelectReco, @sequence::Reconstruction.MCReco ]

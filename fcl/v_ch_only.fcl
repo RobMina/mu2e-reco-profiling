@@ -1,0 +1,9 @@
+# V-ch-only: off-spill job with only the CentralHelix path (LHPath and its output removed). Isolates KKCHmu + LineFinder
+# from the four LoopHelix chains that OffSpillTrk also runs on CHPath.
+physics.CHPath : [ @sequence::Reconstruction.PreTrk, @sequence::Reconstruction.CentralHelixReco, CHFilter, SelectReco,
+  @sequence::Reconstruction.MCReco ]
+physics.trigger_paths : [ CHPath ]
+physics.LHPath : @erase
+physics.EndPath : [ CHCompressionCheck, CentralHelixOutput ]
+physics.analyzers.LHCompressionCheck : @erase  # its SelectEvents names LHPath
+outputs.LoopHelixOutput : @erase

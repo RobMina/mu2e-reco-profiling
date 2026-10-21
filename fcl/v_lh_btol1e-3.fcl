@@ -1,0 +1,10 @@
+# V-lh-btol: LoopHelix BCorrTolerance 1e-4 -> 1e-3 in fit, extension and extrapolation (fewer, longer B-field domains).
+# Do not go tighter than 1e-4: 1e-6 hangs createDomains (pr_stability README, failure mode 2).
+physics.producers.KKDe.ExtensionSettings.BCorrTolerance      : 1e-3
+physics.producers.KKUe.ExtensionSettings.BCorrTolerance      : 1e-3
+physics.producers.KKDmu.ExtensionSettings.BCorrTolerance     : 1e-3
+physics.producers.KKUmu.ExtensionSettings.BCorrTolerance     : 1e-3
+physics.producers.KKDe.ExtrapolationSettings.BCorrTolerance  : 1e-3
+physics.producers.KKUe.ExtrapolationSettings.BCorrTolerance  : 1e-3
+physics.producers.KKDmu.ExtrapolationSettings.BCorrTolerance : 1e-3
+physics.producers.KKUmu.ExtrapolationSettings.BCorrTolerance : 1e-3

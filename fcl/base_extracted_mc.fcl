@@ -1,0 +1,6 @@
+# B-extracted-mc: production field-off extracted-position MC reco (PreTrk + SimpleTimeCluster, LineFinder, KKLine + MCReco).
+# Input: I6 CosmicCRYExtracted au (v04 geometry, Sim_best v1_5); geometry pinned to v04, not the moving alias (rule M6).
+#include "Production/JobConfig/recoMC/Extracted.fcl"
+services.GeometryService.inputFile : "Offline/Mu2eG4/geom/geom_common_extracted_v04.txt"
+#include "Offline/CRVReco/fcl/epilog_extracted_v04.fcl"
+outputs.KinematicLineOutput.fileName : "reco.art"

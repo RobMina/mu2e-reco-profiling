@@ -1,0 +1,7 @@
+# B-offspill-mc: production off-spill MC reco: CHPath (CentralHelix) and LHPath run side by side on cosmics.
+# CHFilter gates only the output (every fit runs); disabled so output size reflects all events, as in the nightly.
+# Input: I4 CosmicSignalOffSpill.
+#include "Production/JobConfig/recoMC/OffSpill.fcl"
+physics.filters.CHFilter : { module_type : FixedFilter ReturnValue : true }
+outputs.CentralHelixOutput.fileName : "reco-CH.art"
+outputs.LoopHelixOutput.fileName : "reco-LH.art"

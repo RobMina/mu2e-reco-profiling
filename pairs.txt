@@ -1,0 +1,50 @@
+# variant  baseline   -- the baseline each test is compared with .
+# The grid worker runs the baseline first, in the same job on the same node, then the variant (PAIR=1, the default for
+# art-timing jobs), so every comparison has a same-CPU-model, same-load baseline. "-" = no paired baseline.
+# Valgrind jobs (TOOL set) are never paired: instruction counts do not depend on the node.
+A1-np           A2-ce
+A2-ce           -
+A3-ceend        A2-ce
+A4-coson        A2-ce
+A5-cosoff       -
+A6-ext          -
+A7-kppunp       -
+A8-kpp          A6-ext
+A9-rglh         A2-ce
+A10-rgkl        A6-ext
+B1-pretrk-ce    A2-ce
+B2-de-ce        A2-ce
+B3-noout-ce     A2-ce
+B4-chonly       A5-cosoff
+B5-noout-off    A5-cosoff
+C1-fbh-ce       A2-ce
+C2-noflag-ce    A2-ce
+C3-agn-ce       A2-ce
+C4-cal-ce       A2-ce
+C5-tpr-ce       A2-ce
+C6-ahf1-ce      A2-ce
+C7-fbh-np       A1-np
+C8-agn-coson    A4-coson
+D1-nobfc-ce     A2-ce
+D2-btol-ce      A2-ce
+D3-noext-ce     A2-ce
+D4-dtstep-ce    A2-ce
+D5-light-ce     A2-ce
+D6-noann-ce     A2-ce
+D7-iter5-ce     A2-ce
+D8-noext-coson  A4-coson
+D9-nobfc-coson  A4-coson
+E1-chbfc        B4-chonly
+E2-chnocrv      B4-chonly
+E3-chsaveall    B4-chonly
+E4-klnocrv      A6-ext
+E5-klts         A6-ext
+E6-klnocrv-kpp  A8-kpp
+F1-crvbig-coson A4-coson
+F2-nomid-ce     A2-ce
+F3-mt2-ce       A2-ce
+F4-mt4-ce       A2-ce
+R1-ce-rep       -
+R2a-null        A2-ce
+R2b-null        A2-ce
+R2c-null        A2-ce

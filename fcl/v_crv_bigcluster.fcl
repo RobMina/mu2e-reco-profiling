@@ -1,0 +1,3 @@
+# V-crv-big: CrvCoincidenceClusterFinder with the big-cluster shortcut enabled (bigClusterThreshold 50000 -> 100 pulses;
+# prolog_v12 sets 50000 = disabled). Scaling test for high-occupancy CRV events; physics changes: diagnostic only.
+physics.producers.CrvCoincidenceClusterFinder.bigClusterThreshold : 100

@@ -1,0 +1,5 @@
+# KPP raw -> dig unpack (run 124155, trk.vst stream) with the complete tracker panel map (fcl/kpp/).
+# Input: I7 raw.mu2e.trk.vst.124155_000001.art. Needs $RP_KPP_CALIB (fcl/kpp/README.md).
+# Use unpack_data_vst_fullmap.fcl instead if the area's Offline predates 1a89014e8.
+#include "unpack_data_vst_fullmap_head.fcl"
+outputs.Output.fileName : "dig.art"

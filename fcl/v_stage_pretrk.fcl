@@ -1,0 +1,6 @@
+# V-stage-hits: on-spill path truncated after the precursors (Calo + TrkHitReco + CRV); no tracking, no output.
+# Gives the precursor cost and memory alone; subtracting from the full job isolates tracking.
+physics.RecoPath : [ @sequence::Reconstruction.PreTrk ]
+physics.EndPath : [ ]
+physics.end_paths : [ ]
+outputs : {}

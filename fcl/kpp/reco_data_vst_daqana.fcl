@@ -1,0 +1,25 @@
+# reco_data_vst.fcl with the run-124155 calibration set: tracker panel delays, straw preamp delays, CRV SiPM and
+# CRV time offsets as DbService text files, and strawResponse_pass1.fcl. These files are not public: they are
+# found through $RP_KPP_CALIB (FHICL_FILE_PATH and MU2E_SEARCH_PATH), see README.md here. Used by
+# fcl/base_kpp_data.fcl.
+#
+#   mu2e -c reco_data_vst_daqana.fcl -s <dig.art> -o <rec.art>
+
+#include "reco_data_vst.fcl"
+#include "strawResponse_pass1.fcl"
+
+services.DbService.textFile : [
+  "Offline/CRVConditions/data/status_extracted_20260630.txt",
+  "CRVSiPM_pass1.txt",
+  "CRVTime_cid_303.txt",
+  "TrkPreampStraw_pass1.txt",
+  "TrkDelayPanel_124155_v1.txt"
+]
+services.DbService.verbose : 0
+
+services.ProditionsService.crvStatus.useDb : true
+services.ProditionsService.crvCalib.useDb  : true
+services.ProditionsService.strawElectronics.useDb : true
+services.ProditionsService.alignedTracker.useDb : false
+services.ProditionsService.trackerStatus.Settings.useDb : false
+services.ProditionsService.trackerPanelMap.useDb : false

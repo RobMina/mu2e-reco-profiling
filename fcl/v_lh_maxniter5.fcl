@@ -1,0 +1,9 @@
+# V-lh-maxniter5: LoopHelix drift fits capped at 5 iterations per meta-iteration (10 in production), seed fit and extension.
+physics.producers.KKDe.FitSettings.MaxNIter        : 5
+physics.producers.KKDe.ExtensionSettings.MaxNIter  : 5
+physics.producers.KKUe.FitSettings.MaxNIter        : 5
+physics.producers.KKUe.ExtensionSettings.MaxNIter  : 5
+physics.producers.KKDmu.FitSettings.MaxNIter       : 5
+physics.producers.KKDmu.ExtensionSettings.MaxNIter : 5
+physics.producers.KKUmu.FitSettings.MaxNIter       : 5
+physics.producers.KKUmu.ExtensionSettings.MaxNIter : 5

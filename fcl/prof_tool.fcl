@@ -1,0 +1,5 @@
+# Services for valgrind (callgrind/massif/dhat) jobs, included LAST in place of prof_services.fcl.
+# No TimeTracker/MemoryTracker: their per-module hooks would show up in the call graph and the heap profile.
+services.scheduler.wantSummary : true
+services.TFileService.fileName : "/dev/null"
+services.DbService.verbose : 0

@@ -1,0 +1,2 @@
+# V-ahf-single: AgnosticHelixFinder finds at most one helix per time cluster (findMultipleHelices false).
+physics.producers.AgnosticHelixFinder.findMultipleHelices : false
