@@ -8,11 +8,12 @@ fixes made from the profiles, what they measured, and the leads that are still o
 - **Where the time goes.** Field-on reco is dominated by track fitting: the LoopHelix fits are 48 % (on-spill) to
   62 % (off-spill cosmics) of all instructions on head. Output writing (zlib) is 13-20 % of MC reco and about 65 % of
   KPP data reco. Pattern recognition is small (about 2.5 % on-spill).
-- **Five fixes merged** (KinKal#227, Offline#2042, #2043, #2044, #2048). Together, on the same events, reco needs
-  **10-12 % fewer instructions per event** on every workload measured, heap allocations fell 26 %, and a 245 s
+- **Six fixes merged.** The first five (KinKal#227, Offline#2042, #2043, #2044, #2048) together, on the same events,
+  cut reco by **10-12 % instructions per event** on every workload measured. Heap allocations fell 26 %, and a 245 s
   off-spill event now takes 0.1 s.
-- **One more fix is open and approved** (KinKal#229, Cholesky inversion): a further **-11.5 % (on-spill) and -14.2 %
-  (off-spill) instructions per event**, with physics output statistically unchanged.
+- **The sixth, KinKal#229 (Cholesky inversion), merged on 2026-10-22.** On top of the first five it cuts a further
+  **11.5 % (on-spill) and 14.2 % (off-spill) instructions per event**, with physics output statistically unchanged.
+  Neither KinKal fix is in a KinKal release yet (the latest is v3.8.0).
 - **Largest open leads:** output compression settings (about 10 % of MC reco time, most of KPP data reco), MC truth
   matching spending time in `std::regex` (about 4-7 % of on-spill MC), and the calorimeter template fit (5-8 % of
   on-spill).
@@ -52,7 +53,7 @@ Hottest functions (exclusive share of event-processing instructions):
 <!-- widths: 30 8 8 8 8 38 -->
 | Function | A2 | A5 | A6 | A8 | Note |
 |---|---|---|---|---|---|
-| `InvertBunchKaufman` behind KinKal `FitData::invert` | **14.9 %** | **17.7 %** | **14.1 %** | 2.9 % | now the top function wherever a fit runs; addressed by KinKal#229 |
+| `InvertBunchKaufman` behind KinKal `FitData::invert` | **14.9 %** | **17.7 %** | **14.1 %** | 2.9 % | now the top function wherever a fit runs; addressed by KinKal#229 (merged 2026-10-22, not in this profile) |
 | zlib (largest entry, under `RootOutput`) | 4.2 % | 6.0 % | 6.7 % | **22.8 %** | the whole write is 13-20 % of MC and ~65 % of A8 |
 | libm `sin`/`cos` | 5.6 % | 9.3 % | 6.7 % | 2.2 % | POCA trigonometry in `LoopHelix` |
 | calo template fit `myfcn` | 4.5 % | - | 3.2 % | - | Minuit numerical derivatives |
@@ -95,14 +96,14 @@ a constraint. On-spill reco made 548k heap allocations per event before the fixe
 | [Mu2e/Offline#2044](https://github.com/Mu2e/Offline/pull/2044) | LoopHelix seed: new `MaxSeedStrawHitDt` cut (200 ns) drops seed straw hits whose closest approach is far from their measured time | A5 same-host CPU -7.5 %; the outlier event 29-245 s -> 0.09 s | CE+1BB bitwise identical; off-spill pass counts identical | merged 2026-10-17 |
 | [Mu2e/Offline#2042](https://github.com/Mu2e/Offline/pull/2042) | `KKTruthSeed`: skip zero-momentum MC trajectory points and non-finite truth pieces | robustness: the job no longer aborts. The diagnostic it enables costs +7 % of extracted MC reco | no change except that the affected events now get a truth seed | merged 2026-10-21 |
 | [Mu2e/Offline#2048](https://github.com/Mu2e/Offline/pull/2048) | `MakeCrvRecoPulses`: dedicated Levenberg-Marquardt fit of the 3-parameter Gumbel on its samples instead of `TGraph::Fit` + Minuit2 per pulse | `CrvRecoPulsesFinder` 3.1-3.6x fewer instructions, **4.3-4.9x faster**; A8 share 12.0 % -> 3.7 % | statistical: pulse PE and time within 1e-4 to 1e-3; failed-fit flag agreement 99.98-99.99 % | merged 2026-10-19 |
-| [KFTrack/KinKal#229](https://github.com/KFTrack/KinKal/pull/229) | `FitData::invert`: Cholesky (`SMatrix::InvertChol`) for the symmetric positive-definite 6x6 matrices, with Bunch-Kaufman as a fallback (taken by 0.08-0.10 % of calls) | ~811 instead of ~3,300 instructions per inversion; reco **-11.5 % (A2) / -14.2 % (A5)** instructions per event; LoopHelixFit -22 to -24 %; same-host A2 event mean -16 %, median -3.4 % | statistical A/B: truth-matched efficiency ratio 1.0002 (CE+1BB, 24,950 events), 1.0000 (off-spill CentralHelix), 0.9999 (extracted KinematicLine); every per-track mean shift within 1.1 sigma; KinKal unit tests 26/26 | **open, approved** (2026-10-20) |
+| [KFTrack/KinKal#229](https://github.com/KFTrack/KinKal/pull/229) | `FitData::invert`: Cholesky (`SMatrix::InvertChol`) for the symmetric positive-definite 6x6 matrices, with Bunch-Kaufman as a fallback (taken by 0.08-0.10 % of calls) | ~811 instead of ~3,300 instructions per inversion; reco **-11.5 % (A2) / -14.2 % (A5)** instructions per event; LoopHelixFit -22 to -24 %; same-host A2 event mean -16 %, median -3.4 % | statistical A/B: truth-matched efficiency ratio 1.0002 (CE+1BB, 24,950 events), 1.0000 (off-spill CentralHelix), 0.9999 (extracted KinematicLine); every per-track mean shift within 1.1 sigma; KinKal unit tests 26/26 | merged 2026-10-22; **not yet in a KinKal release** |
 
 How the fixes were validated: changes that should not alter output had to be bitwise identical (every leaf of the
 EventNtuple, `--rtol 0`). Changes that alter the last digits of a fit (#2048, #229) were compared statistically on
 the same events: yields, truth-matched efficiency, and per-track parameter means and widths.
 
-To get the full benefit, production needs a KinKal release containing #227 (and #229 once merged), plus an Offline
-that builds against it.
+To get the full benefit, production needs a KinKal release containing #227 and #229, plus an Offline that builds
+against it.
 
 ## Open leads, ranked by ceiling
 
@@ -111,7 +112,7 @@ A ceiling is the Amdahl bound: the share of instructions the targeted code holds
 <!-- widths: 3 26 30 14 11 16 -->
 | # | Lead | Evidence | Ceiling | Owner | Effect on output |
 |---|---|---|---|---|---|
-| 1 | Faster KinKal weight/parameter conversions | **in progress: KinKal#229** (above). A further step would skip re-converting states that did not change (`DomainWall::process`, `Material::process` call `FitState::wData()`) | up to the full 14-18 % with caching | KinKal | statistical |
+| 1 | Faster KinKal weight/parameter conversions | **first step merged: KinKal#229** (above; the inversion falls from 14.9 % / 17.7 % to 4.3 % / 5.2 % of A2 / A5). A further step would skip re-converting states that did not change (`DomainWall::process`, `Material::process` call `FitState::wData()`) | the remaining ~4-5 % plus the conversions saved by caching | KinKal | statistical |
 | 2 | Output compression: LZ4/ZSTD or a lower zlib level through `RootOutput` settings | zlib 9-11 % of MC instructions and 40 % of A8; the write costs about twice its instruction share in time | ~10 % of MC reco time; most of KPP data reco | Production | file size and read speed only |
 | 3 | Resolve MC `art::Ptr`s once per collection (`CaloHitTruthMatch`, `CompressDigiMCs`), or cache `uniform_type_name` in art | `CaloHitTruthMatch` 7.7 % of A2, 96 % of it in `std::regex` (1,420 lookups per event); 4.6 % of allocations | ~7 % of on-spill MC | Offline or art | bitwise |
 | 4 | Calo template fit: analytic gradient, skip the Hessian when unused, reuse one `TMinuit` per module | `CaloRecoDigiMaker` 11 % of A2: 41 % numerical derivatives, 26 % numerical Hessian; a new `TMinuit` per fit = 3.5 % of allocations | ~5-8 % of on-spill | Offline (calo) | statistical (bitwise for `TMinuit` reuse alone) |
