@@ -1,6 +1,6 @@
 # Mu2e reconstruction profiling, October 2026: findings, fixes and results
 
-*R. Mina, 21 October 2026. Where Mu2e Offline reconstruction spends its CPU and memory, the
+*R. Mina, 21 October 2026, updated 26 October 2026. Where Mu2e Offline reconstruction spends its CPU and memory, the
 fixes made from the profiles, what they measured, and the leads that are still open.*
 
 ## Summary
@@ -8,15 +8,18 @@ fixes made from the profiles, what they measured, and the leads that are still o
 - **Where the time goes.** Field-on reco is dominated by track fitting: the LoopHelix fits are 48 % (on-spill) to
   62 % (off-spill cosmics) of all instructions on head. Output writing (zlib) is 13-20 % of MC reco and about 65 % of
   KPP data reco. Pattern recognition is small (about 2.5 % on-spill).
-- **Six fixes merged.** The first five (KinKal#227, Offline#2042, #2043, #2044, #2048) together, on the same events,
+- **Seven fixes merged.** The first five (KinKal#227, Offline#2042, #2043, #2044, #2048) together, on the same events,
   cut reco by **10-12 % instructions per event** on every workload measured. Heap allocations fell 26 %, and a 245 s
   off-spill event now takes 0.1 s.
 - **The sixth, KinKal#229 (Cholesky inversion), merged on 2026-10-22.** On top of the first five it cuts a further
   **11.5 % (on-spill) and 14.2 % (off-spill) instructions per event**, with physics output statistically unchanged.
-  Neither KinKal fix is in a KinKal release yet (the latest is v3.8.0).
-- **Largest open leads:** output compression settings (about 10 % of MC reco time, most of KPP data reco), MC truth
-  matching spending time in `std::regex` (about 4-7 % of on-spill MC), and the calorimeter template fit (5-8 % of
-  on-spill).
+  Both KinKal fixes are in **KinKal v3.9.0** (23 October 2026), which envset p109 carries.
+- **The seventh, Production#588 (merged 2026-10-24), writes reco output with ZSTD level 5** instead of art's default
+  zlib level 7: CPU **-3.9 % on-spill MC and -21.6 % KPP data reco**, files 3-6 % smaller, reading back 13-16 % faster,
+  output lossless.
+- **Largest open leads:** MC truth matching spending time in `std::regex` (about 4-7 % of on-spill MC), the
+  calorimeter template fit (5-8 % of on-spill), and fewer KinKal weight/parameter conversions (the remaining 4-5 %
+  after #229).
 
 ## What was measured
 
@@ -54,7 +57,7 @@ Hottest functions (exclusive share of event-processing instructions):
 | Function | A2 | A5 | A6 | A8 | Note |
 |---|---|---|---|---|---|
 | `InvertBunchKaufman` behind KinKal `FitData::invert` | **14.9 %** | **17.7 %** | **14.1 %** | 2.9 % | now the top function wherever a fit runs; addressed by KinKal#229 (merged 2026-10-22, not in this profile) |
-| zlib (largest entry, under `RootOutput`) | 4.2 % | 6.0 % | 6.7 % | **22.8 %** | the whole write is 13-20 % of MC and ~65 % of A8 |
+| zlib (largest entry, under `RootOutput`) | 4.2 % | 6.0 % | 6.7 % | **22.8 %** | the whole write is 13-20 % of MC and ~65 % of A8; reco output is ZSTD 5 since Production#588 (merged 2026-10-24, not in this profile) |
 | libm `sin`/`cos` | 5.6 % | 9.3 % | 6.7 % | 2.2 % | POCA trigonometry in `LoopHelix` |
 | calo template fit `myfcn` | 4.5 % | - | 3.2 % | - | Minuit numerical derivatives |
 | `std::regex` (art `Ptr` type names) | 3.9 % | - | 2.9 % | - | calo truth matching, `CompressDigiMCs` |
@@ -91,19 +94,20 @@ a constraint. On-spill reco made 548k heap allocations per event before the fixe
 <!-- widths: 13 28 26 22 11 -->
 | PR | Change | Measured gain | Effect on output | State |
 |---|---|---|---|---|
-| [KFTrack/KinKal#227](https://github.com/KFTrack/KinKal/pull/227) | `PiecewiseTrajectory::nearestIndex`: binary search (`std::lower_bound`) instead of a linear scan over pieces (1,233 -> 193 instructions per call) | same host, same events: A2 CPU -5.1 %, median event -4.8 %; A5 mean event -15.8 %, median -9.8 %; every fit module -9 to -13 % | bitwise identical (A2 2,000 events; A5 CentralHelix 10k events) | merged 2026-10-17; **not yet in a KinKal release** (latest v3.8.0) |
+| [KFTrack/KinKal#227](https://github.com/KFTrack/KinKal/pull/227) | `PiecewiseTrajectory::nearestIndex`: binary search (`std::lower_bound`) instead of a linear scan over pieces (1,233 -> 193 instructions per call) | same host, same events: A2 CPU -5.1 %, median event -4.8 %; A5 mean event -15.8 %, median -9.8 %; every fit module -9 to -13 % | bitwise identical (A2 2,000 events; A5 CentralHelix 10k events) | merged 2026-10-17; in KinKal v3.9.0 |
 | [Mu2e/Offline#2043](https://github.com/Mu2e/Offline/pull/2043) | `StrawResponse::interpolateCalib`: stack buffers instead of two `std::vector` per call (22 % of all heap allocations) | A2 CPU -2.9 %; removes 22 % of heap allocations per event | bitwise identical (2,000 events) | merged 2026-10-17 |
 | [Mu2e/Offline#2044](https://github.com/Mu2e/Offline/pull/2044) | LoopHelix seed: new `MaxSeedStrawHitDt` cut (200 ns) drops seed straw hits whose closest approach is far from their measured time | A5 same-host CPU -7.5 %; the outlier event 29-245 s -> 0.09 s | CE+1BB bitwise identical; off-spill pass counts identical | merged 2026-10-17 |
 | [Mu2e/Offline#2042](https://github.com/Mu2e/Offline/pull/2042) | `KKTruthSeed`: skip zero-momentum MC trajectory points and non-finite truth pieces | robustness: the job no longer aborts. The diagnostic it enables costs +7 % of extracted MC reco | no change except that the affected events now get a truth seed | merged 2026-10-21 |
 | [Mu2e/Offline#2048](https://github.com/Mu2e/Offline/pull/2048) | `MakeCrvRecoPulses`: dedicated Levenberg-Marquardt fit of the 3-parameter Gumbel on its samples instead of `TGraph::Fit` + Minuit2 per pulse | `CrvRecoPulsesFinder` 3.1-3.6x fewer instructions, **4.3-4.9x faster**; A8 share 12.0 % -> 3.7 % | statistical: pulse PE and time within 1e-4 to 1e-3; failed-fit flag agreement 99.98-99.99 % | merged 2026-10-19 |
-| [KFTrack/KinKal#229](https://github.com/KFTrack/KinKal/pull/229) | `FitData::invert`: Cholesky (`SMatrix::InvertChol`) for the symmetric positive-definite 6x6 matrices, with Bunch-Kaufman as a fallback (taken by 0.08-0.10 % of calls) | ~811 instead of ~3,300 instructions per inversion; reco **-11.5 % (A2) / -14.2 % (A5)** instructions per event; LoopHelixFit -22 to -24 %; same-host A2 event mean -16 %, median -3.4 % | statistical A/B: truth-matched efficiency ratio 1.0002 (CE+1BB, 24,950 events), 1.0000 (off-spill CentralHelix), 0.9999 (extracted KinematicLine); every per-track mean shift within 1.1 sigma; KinKal unit tests 26/26 | merged 2026-10-22; **not yet in a KinKal release** |
+| [KFTrack/KinKal#229](https://github.com/KFTrack/KinKal/pull/229) | `FitData::invert`: Cholesky (`SMatrix::InvertChol`) for the symmetric positive-definite 6x6 matrices, with Bunch-Kaufman as a fallback (taken by 0.08-0.10 % of calls) | ~811 instead of ~3,300 instructions per inversion; reco **-11.5 % (A2) / -14.2 % (A5)** instructions per event; LoopHelixFit -22 to -24 %; same-host A2 event mean -16 %, median -3.4 % | statistical A/B: truth-matched efficiency ratio 1.0002 (CE+1BB, 24,950 events), 1.0000 (off-spill CentralHelix), 0.9999 (extracted KinematicLine); every per-track mean shift within 1.1 sigma; KinKal unit tests 26/26 | merged 2026-10-22; in KinKal v3.9.0 |
+| [Mu2e/Production#588](https://github.com/Mu2e/Production/pull/588) | Reco output (`Reconstruction.Output`, `RegrowOutput`) written with ZSTD level 5 (`compressionLevel : 505`) instead of art's default zlib level 7; chosen from four settings measured with this harness (zlib 1 and LZ4 4 save more CPU but make files 3-19 % larger) | through the real job configurations, same events, same host: `recoMC/OnSpill.fcl` 500 events CPU -3.9 %, `reco/Extracted.fcl` KPP data 2,000 events -21.6 %; files -2.7 % / -5.7 %; full read-back -13 % / -16 % | lossless: EventNtuples bit-identical (481 leaves on-spill, 152 KPP); one job reads a mix of zlib and ZSTD inputs | merged 2026-10-24 |
 
 How the fixes were validated: changes that should not alter output had to be bitwise identical (every leaf of the
 EventNtuple, `--rtol 0`). Changes that alter the last digits of a fit (#2048, #229) were compared statistically on
 the same events: yields, truth-matched efficiency, and per-track parameter means and widths.
 
-To get the full benefit, production needs a KinKal release containing #227 and #229, plus an Offline that builds
-against it.
+KinKal v3.9.0 (23 October 2026) contains #227 and #229; Offline main builds against it since moving to envset p109
+(23 October).
 
 ## Open leads, ranked by ceiling
 
@@ -113,17 +117,16 @@ A ceiling is the Amdahl bound: the share of instructions the targeted code holds
 | # | Lead | Evidence | Ceiling | Owner | Effect on output |
 |---|---|---|---|---|---|
 | 1 | Faster KinKal weight/parameter conversions | **first step merged: KinKal#229** (above; the inversion falls from 14.9 % / 17.7 % to 4.3 % / 5.2 % of A2 / A5). A further step would skip re-converting states that did not change (`DomainWall::process`, `Material::process` call `FitState::wData()`) | the remaining ~4-5 % plus the conversions saved by caching | KinKal | statistical |
-| 2 | Output compression: LZ4/ZSTD or a lower zlib level through `RootOutput` settings | zlib 9-11 % of MC instructions and 40 % of A8; the write costs about twice its instruction share in time | ~10 % of MC reco time; most of KPP data reco | Production | file size and read speed only |
-| 3 | Resolve MC `art::Ptr`s once per collection (`CaloHitTruthMatch`, `CompressDigiMCs`), or cache `uniform_type_name` in art | `CaloHitTruthMatch` 7.7 % of A2, 96 % of it in `std::regex` (1,420 lookups per event); 4.6 % of allocations | ~7 % of on-spill MC | Offline or art | bitwise |
-| 4 | Calo template fit: analytic gradient, skip the Hessian when unused, reuse one `TMinuit` per module | `CaloRecoDigiMaker` 11 % of A2: 41 % numerical derivatives, 26 % numerical Hessian; a new `TMinuit` per fit = 3.5 % of allocations | ~5-8 % of on-spill | Offline (calo) | statistical (bitwise for `TMinuit` reuse alone) |
-| 5 | CentralHelix DS-material extrapolation: a bounding test before each `stepIntersect` | the CRV extrapolation is 20 % of a CentralHelix-only job | most of that 20 %, in CentralHelix jobs | Offline, KinKal | bitwise if conservative |
-| 6 | POCA trigonometry: one `sincos` per time in `LoopHelix::localPosition`/`localDirection` | libm 5.6-9.3 %; ~190k `localPosition` calls per event | a few % | KinKal | bitwise if the values match |
-| 7 | Drop unused input products at read (`source.inputCommands`) | lazy SimParticle reads are 72 % of `SelectRecoMC` (6.4 % of A2) | part of 6 % | Production | bitwise if nothing downstream needs them |
-| 8 | Memory: B-field map in single precision, or only the maps a job needs | 387 MB of the ~765 MB heap | 200-350 MB RSS per job (matters for multi-schedule jobs and HPC nodes) | Offline | needs a fit A/B |
+| 2 | Resolve MC `art::Ptr`s once per collection (`CaloHitTruthMatch`, `CompressDigiMCs`), or cache `uniform_type_name` in art | `CaloHitTruthMatch` 7.7 % of A2, 96 % of it in `std::regex` (1,420 lookups per event); 4.6 % of allocations | ~7 % of on-spill MC | Offline or art | bitwise |
+| 3 | Calo template fit: analytic gradient, skip the Hessian when unused, reuse one `TMinuit` per module | `CaloRecoDigiMaker` 11 % of A2: 41 % numerical derivatives, 26 % numerical Hessian; a new `TMinuit` per fit = 3.5 % of allocations | ~5-8 % of on-spill | Offline (calo) | statistical (bitwise for `TMinuit` reuse alone) |
+| 4 | CentralHelix DS-material extrapolation: a bounding test before each `stepIntersect` | the CRV extrapolation is 20 % of a CentralHelix-only job | most of that 20 %, in CentralHelix jobs | Offline, KinKal | bitwise if conservative |
+| 5 | POCA trigonometry: one `sincos` per time in `LoopHelix::localPosition`/`localDirection` | libm 5.6-9.3 %; ~190k `localPosition` calls per event | a few % | KinKal | bitwise if the values match |
+| 6 | Drop unused input products at read (`source.inputCommands`) | lazy SimParticle reads are 72 % of `SelectRecoMC` (6.4 % of A2) | part of 6 % | Production | bitwise if nothing downstream needs them |
+| 7 | Memory: B-field map in single precision, or only the maps a job needs | 387 MB of the ~765 MB heap | 200-350 MB RSS per job (matters for multi-schedule jobs and HPC nodes) | Offline | needs a fit A/B |
 
-Still to measure: which zlib stage dominates (debug symbols for zlib and libm, before choosing a compression
-setting); DHAT on off-spill and extracted (only on-spill has allocation data); the remaining 4-6 s off-spill events,
-which come from a mechanism different from the one #2044 fixed.
+Output compression, lead 2 in the first version of this report, is done (Production#588, above). Still to measure:
+the libm entries (debug symbols for libm); DHAT on off-spill and extracted (only on-spill has allocation data); the
+remaining 4-6 s off-spill events, which come from a mechanism different from the one #2044 fixed.
 
 ## Repository layout
 
